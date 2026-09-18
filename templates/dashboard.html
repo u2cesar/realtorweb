@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Generador de landing pages — Dashboard</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brandmark">Generador de <span>landing pages</span></div>
+    <p>Completa los datos de la propiedad y sube las fotos — al enviar, se descarga un archivo <code>.html</code> autocontenido listo para subir a tu hosting.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-box">
+        {% for category, message in messages %}
+          <p>{{ message }}</p>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <form action="{{ url_for('generate') }}" method="post" enctype="multipart/form-data">
+
+    <section class="card">
+      <h2>Marca / sitio</h2>
+      <div class="grid-2">
+        <label>Nombre de marca (parte principal)
+          <input type="text" name="brand_main" value="PM Real" placeholder="PM Real">
+        </label>
+        <label>Acento de marca (color distinto)
+          <input type="text" name="brand_accent" value="Home" placeholder="Home">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>Frase corta (aparece en el pie de página)
+          <input type="text" name="brand_tagline" placeholder="Propiedades seleccionadas en el sur de la Florida.">
+        </label>
+        <label>Sitio web (opcional)
+          <input type="url" name="brand_url" placeholder="https://www.tusitio.com">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>Emoji del ícono de pestaña (favicon)
+          <input type="text" name="favicon_emoji" value="🏠" maxlength="4">
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Propiedad</h2>
+      <div class="grid-2">
+        <label>Dirección / título <span class="req">*</span>
+          <input type="text" name="address_title" required placeholder="10860 SW 217th Terrace">
+        </label>
+        <label>Ciudad, estado <span class="req">*</span>
+          <input type="text" name="city_state" required placeholder="Miami, FL">
+        </label>
+      </div>
+      <label>Texto pequeño arriba del título (eyebrow)
+        <input type="text" name="hero_eyebrow" placeholder="Oportunidad de inversión — Miami, FL">
+      </label>
+      <label>Subtítulo bajo el título
+        <textarea name="hero_subtitle" rows="2" placeholder="Una casa de una planta completamente renovada, lista para vivir desde el primer día."></textarea>
+      </label>
+      <div class="grid-4">
+        <label>Habitaciones
+          <input type="text" name="beds" placeholder="4">
+        </label>
+        <label>Baños
+          <input type="text" name="baths" placeholder="3">
+        </label>
+        <label>Lote (pies², solo número)
+          <input type="text" name="lot_sqft" placeholder="10000">
+        </label>
+        <label>Construcción (pies², opcional)
+          <input type="text" name="construction_sqft" placeholder="1450">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>Precio o etiqueta destacada (opcional, aparece como pastilla)
+          <input type="text" name="price_pill" placeholder="$450,000 — o déjalo vacío">
+        </label>
+        <label>Pastilla extra (opcional)
+          <input type="text" name="extra_pill" placeholder="Totalmente renovada">
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Introducción / oportunidad</h2>
+      <div class="grid-2">
+        <label>Kicker (etiqueta pequeña)
+          <input type="text" name="intro_kicker" value="La propiedad">
+        </label>
+        <label>Título de la sección
+          <input type="text" name="intro_heading" placeholder="Espacio para vivir hoy y para construir a futuro">
+        </label>
+      </div>
+      <label>Párrafo 1
+        <textarea name="intro_paragraph_1" rows="2"></textarea>
+      </label>
+      <label>Párrafo 2 (opcional)
+        <textarea name="intro_paragraph_2" rows="2"></textarea>
+      </label>
+      <label>Etiqueta del número grande (por defecto: pies² de lote)
+        <input type="text" name="figure_label" value="pies² de lote">
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Foto principal (hero) <span class="req">*</span></h2>
+      <p class="hint">Se muestra a pantalla completa arriba de todo. Ideal: vertical u horizontal, buena luz.</p>
+      <input type="file" name="hero_photo" accept="image/*" required>
+    </section>
+
+    <section class="card">
+      <h2>Galería (cubo 3D)</h2>
+      <p class="hint">Sube 2 o más fotos. En "Descripciones" escribe una línea por foto, en el mismo orden en que las seleccionaste (ej: línea 1 = descripción de la foto 1). Si te faltan líneas, se completan como "Foto 2", "Foto 3", etc.</p>
+      <label>Fotos de la galería <span class="req">*</span>
+        <input type="file" name="gallery_photos" accept="image/*" multiple required>
+      </label>
+      <label>Descripciones (una por línea, mismo orden)
+        <textarea name="gallery_captions" rows="6" placeholder="Fachada al atardecer
+Cocina renovada
+Habitación principal
+Patio trasero"></textarea>
+      </label>
+      <label>Texto bajo el título "Un recorrido por la casa"
+        <input type="text" name="gallery_intro_text" placeholder="Gira el cubo para ver cada espacio.">
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Características</h2>
+      <div class="grid-2">
+        <label>Interior (una por línea)
+          <textarea name="features_interior" rows="6" placeholder="4 habitaciones amplias
+3 baños completos, renovados
+Cocina nueva con isla
+Piso nuevo en toda la casa"></textarea>
+        </label>
+        <label>Exterior y lote (una por línea)
+          <textarea name="features_exterior" rows="6" placeholder="Lote de 10,000 pies², cercado
+Jardín amplio, ideal para piscina
+Porche frontal cubierto"></textarea>
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Franja de patio / estilo de vida <span class="opt">(opcional)</span></h2>
+      <p class="hint">Una foto ancha con un mensaje corto encima — normalmente el patio, el jardín o una vista destacada.</p>
+      <label>Foto
+        <input type="file" name="lifestyle_photo" accept="image/*">
+      </label>
+      <div class="grid-2">
+        <label>Título
+          <input type="text" name="lifestyle_heading" placeholder="Suficiente terreno para imaginar lo que sigue">
+        </label>
+        <label>Texto
+          <input type="text" name="lifestyle_text" placeholder="Un lote de este tamaño es difícil de encontrar ya renovado.">
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>Asesor(a) <span class="opt">(opcional)</span></h2>
+      <p class="hint">Si la dejas vacía, esta sección no aparece en la página.</p>
+      <label>Foto del asesor(a)
+        <input type="file" name="agent_photo" accept="image/*">
+      </label>
+      <div class="grid-2">
+        <label>Nombre
+          <input type="text" name="agent_name" placeholder="Paola Maldonado">
+        </label>
+        <label>Rol / marca (línea bajo el nombre)
+          <input type="text" name="agent_role_line" placeholder="PM Real Home · Miami, FL">
+        </label>
+      </div>
+      <label>Biografía corta
+        <textarea name="agent_bio" rows="2" placeholder="Acompaña a cada cliente desde la primera visita hasta el cierre."></textarea>
+      </label>
+      <label>Texto del cartel sobre la foto
+        <input type="text" name="agent_badge_text" value="Su mejor inversión">
+      </label>
+    </section>
+
+    <section class="card">
+      <h2>Contacto / WhatsApp</h2>
+      <div class="grid-2">
+        <label>Número de WhatsApp (con código de país, solo números) <span class="req">*</span>
+          <input type="text" name="whatsapp_number" required placeholder="17865909545">
+        </label>
+        <label>Mensaje prellenado
+          <input type="text" name="whatsapp_message" placeholder="Hola, vi la propiedad y me gustaría más información.">
+        </label>
+      </div>
+      <div class="grid-2">
+        <label>Título del CTA final
+          <input type="text" name="cta_heading" placeholder="Agenda tu visita">
+        </label>
+        <label>Texto del CTA final
+          <input type="text" name="cta_text" placeholder="Escríbenos por WhatsApp y coordinamos un recorrido.">
+        </label>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>SEO (opcional)</h2>
+      <div class="grid-2">
+        <label>Título de la pestaña del navegador
+          <input type="text" name="page_title">
+        </label>
+        <label>Descripción (para buscadores)
+          <input type="text" name="meta_description">
+        </label>
+      </div>
+    </section>
+
+    <div class="submit-row">
+      <button type="submit" class="btn-generate">Generar página</button>
+    </div>
+  </form>
+</main>
+
+</body>
+</html>
