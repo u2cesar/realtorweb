@@ -27,8 +27,9 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Abre `http://localhost:5000` en el navegador, completa el formulario y al
-enviarlo se descarga el archivo `.html` de la propiedad.
+Abre `http://localhost:5000` en el navegador. La aplicación te pedirá iniciar
+sesión o registrarte (`/register`). Una vez registrado e iniciada la sesión,
+podrás acceder al formulario para generar las landing pages.
 
 ## Desplegar en Railway
 
@@ -47,7 +48,8 @@ enviarlo se descarga el archivo `.html` de la propiedad.
 
 | Variable     | Para qué sirve                                              | Obligatoria |
 |--------------|---------------------------------------------------------------|-------------|
-| `SECRET_KEY` | Firma las cookies de sesión (usadas solo para mostrar errores)| No — pero se recomienda poner una en producción |
+| `SECRET_KEY` | Firma las cookies de sesión (usadas para autenticación y mensajes)| No — pero se recomienda poner una en producción |
+| `DATABASE_PATH` | Ruta del archivo SQLite para los usuarios | No — por defecto es `app.db` |
 
 En Railway: **Settings → Variables → New Variable** para agregar `SECRET_KEY`
 con cualquier texto largo y aleatorio.
@@ -75,12 +77,15 @@ con cualquier texto largo y aleatorio.
 
 ```
 pm-landing-generator/
-├── app.py                       # Rutas Flask (dashboard + generar)
+├── app.py                       # Rutas Flask (dashboard, registro, login, logout, generar)
+├── database.py                  # Lógica de base de datos SQLite y gestión de usuarios
 ├── generator.py                 # Lógica: procesa el formulario y las fotos, renderiza la plantilla
 ├── requirements.txt
 ├── Procfile                     # Comando de arranque para Railway
 ├── templates/
 │   ├── dashboard.html           # Formulario del dashboard
+│   ├── login.html               # Formulario de inicio de sesión
+│   ├── register.html            # Formulario de registro de usuario
 │   └── landing_template.html    # Plantilla Jinja2 de la página final
 └── static/
     └── dashboard.css            # Estilos SOLO del dashboard (la página generada no depende de esto)
