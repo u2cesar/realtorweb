@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro — Generador de landing pages</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="wrap">
+    <div class="brandmark">Generador de <span>landing pages</span></div>
+    <p>Crea tu cuenta para comenzar a generar landing pages de tus propiedades.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="auth-container">
+    <div class="card auth-card">
+      <h2>Crear una cuenta</h2>
+      <p class="hint">Ingresa tus datos para registrarte</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-box {{ category }}">
+              <p>{{ message }}</p>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form action="{{ url_for('register') }}" method="post">
+        <label>Nombre de usuario <span class="req">*</span>
+          <input type="text" name="username" required placeholder="tu_usuario" value="{{ username if username else '' }}">
+        </label>
+
+        <label>Contraseña <span class="req">*</span>
+          <input type="password" name="password" required placeholder="••••••••">
+        </label>
+
+        <label>Confirmar contraseña <span class="req">*</span>
+          <input type="password" name="confirm_password" required placeholder="••••••••">
+        </label>
+
+        <div class="auth-actions">
+          <button type="submit" class="btn-generate auth-btn">Registrarse</button>
+        </div>
+      </form>
+
+      <div class="auth-footer">
+        <p>¿Ya tienes una cuenta? <a href="{{ url_for('login') }}">Inicia sesión aquí</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+
+</body>
+</html>
